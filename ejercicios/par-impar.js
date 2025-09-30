@@ -1,5 +1,5 @@
 
-const numero="e";
+const numero="187";
 
 if (isNaN(numero)) {
     console.log("Entrada invalida, no es un numero");
