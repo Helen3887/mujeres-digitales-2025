@@ -12,6 +12,9 @@ let AppService = class AppService {
     getHello() {
         return 'Hello World!';
     }
+    getStatus() {
+        return { status: 'OK', time: new Date().toISOString() };
+    }
 };
 exports.AppService = AppService;
 exports.AppService = AppService = __decorate([

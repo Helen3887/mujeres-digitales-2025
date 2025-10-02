@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { IUser } from 'src/interfaces';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class UsersService {
         { id: 1, name: 'John Doe', email: "jhon@getMaxListeners.com", age: 30, password: "password123" },
         { id: 2, name: 'Miguel', email: "migue@gmail.com", age: 30, password: "password123" },
     ];
-    
+
     //Me devuelve todos los usuarios
     findAll(): IUser[] {
         return this.users;
@@ -20,4 +20,37 @@ export class UsersService {
         if (!userFind) throw new NotFoundException('Usuario no encontrado');
         return userFind;
     }
+
+    //Crear un usuario
+    //De mi interfaz IUser le omitiré el id
+    create(user: Omit<IUser, 'id'>): IUser {
+        const newId =
+            this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
+
+        if (user.age && user.age >= 18) {
+            const newUser: IUser = {
+                id: newId,
+                ...user,
+            };
+            this.users.push(newUser);
+            return newUser;
+        }
+
+        throw new BadRequestException('El usuario debe ser mayor de edad');
+    }
+
+    //Método assign = Me pide el objeto original (userIndex)
+    //Qué le voy a cambiar? El nuevo usuario que le estoy pasando (newUser)
+    update(id: number, newUser: Omit<IUser, 'id'>): IUser {
+        const userIndex = this.findOne(id);
+        Object.assign(userIndex, newUser);
+        return userIndex;
+    }
+
+    remove(id: number) {
+        const userIndex = this.users.findIndex((user) => user.id === id);
+        this.users.splice(userIndex, 1);
+        return { message: 'Usuario eliminado correctamente' };
+    }
+
 }

@@ -22,6 +22,28 @@ let UsersService = class UsersService {
             throw new common_1.NotFoundException('Usuario no encontrado');
         return userFind;
     }
+    create(user) {
+        const newId = this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
+        if (user.age && user.age >= 18) {
+            const newUser = {
+                id: newId,
+                ...user,
+            };
+            this.users.push(newUser);
+            return newUser;
+        }
+        throw new common_1.BadRequestException('El usuario debe ser mayor de edad');
+    }
+    update(id, newUser) {
+        const userIndex = this.findOne(id);
+        Object.assign(userIndex, newUser);
+        return userIndex;
+    }
+    remove(id) {
+        const userIndex = this.users.findIndex((user) => user.id === id);
+        this.users.splice(userIndex, 1);
+        return { message: 'Usuario eliminado correctamente' };
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
